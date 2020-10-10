@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Brand } from '../../models/brand.model';
+import { BrandService } from '../../services/brand.service';
 
 @Component({
   selector: 'app-brand-add',
@@ -7,9 +12,35 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BrandAddComponent implements OnInit {
 
-  constructor() { }
+  form: FormGroup;
+
+  constructor(
+    private router: Router,
+    private brandService: BrandService
+  ) { }
 
   ngOnInit(): void {
+    this.generateForm();
+  }
+
+  generateForm() {
+    this.form = new FormGroup({
+      'Name': new FormControl(null, Validators.required),
+      'Description': new FormControl(null, Validators.required)
+    });
+  }
+
+  onAdd() {
+    if (this.form.valid) {
+      const brand: Brand = this.form.value;
+
+      this.brandService.createBrand(brand)
+        .subscribe(ii => {
+          this.router.navigate(['brand/list']);
+        }, err => {
+          console.log(err);
+        });
+    }
   }
 
 }
