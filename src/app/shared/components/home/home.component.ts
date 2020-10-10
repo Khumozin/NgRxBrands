@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-brand',
-  templateUrl: './brand.component.html',
-  styleUrls: ['./brand.component.scss']
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class BrandComponent implements OnInit {
+export class HomeComponent implements OnInit {
 
   constructor(private router: Router) { }
 
@@ -14,7 +14,7 @@ export class BrandComponent implements OnInit {
   }
 
   onClick() {
-    this.router.navigate(['brand/add']);
+    this.router.navigate(['brand']);
   }
 
 }
