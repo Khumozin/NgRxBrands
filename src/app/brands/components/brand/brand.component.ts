@@ -13,8 +13,12 @@ export class BrandComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onClick() {
+  onAdd() {
     this.router.navigate(['brand/add']);
+  }
+
+  onView() {
+    this.router.navigate(['brand/list']);
   }
 
 }
