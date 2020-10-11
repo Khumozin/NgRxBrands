@@ -13,6 +13,10 @@ import { BrandAddComponent } from './components/brand-add/brand-add.component';
 import { BrandEditComponent } from './components/brand-edit/brand-edit.component';
 import { BrandListComponent } from './components/brand-list/brand-list.component';
 import { BrandComponent } from './components/brand/brand.component';
+import { StoreModule } from '@ngrx/store';
+import * as fromBrand from './store/brand.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { BrandEffects } from './store/brand.effects';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import { BrandComponent } from './components/brand/brand.component';
     MatButtonModule,
     MatProgressSpinnerModule,
     MatMenuModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    StoreModule.forFeature(fromBrand.brandsFeatureKey, fromBrand.reducer),
+    EffectsModule.forFeature([BrandEffects])
   ],
   exports: [
     BrandComponent,

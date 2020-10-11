@@ -7,3 +7,8 @@
 <button mat-raised-button
         (click)="onView()"
         color="primary">View Brands</button>
+
+<ng-container *ngIf="brand$ | async as brand">
+        <h4>Brand Name: {{ brand.Name }}</h4>
+        <h4>Brand Description: {{ brand.Description }}</h4>
+</ng-container>

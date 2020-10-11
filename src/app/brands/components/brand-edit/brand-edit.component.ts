@@ -1,30 +1,39 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Update } from '@ngrx/entity';
+import { select, Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 
 import { Brand } from '../../models/brand.model';
-import { BrandService } from '../../services/brand.service';
+import { updateBrand } from '../../store/brand.actions';
+import { BrandState } from '../../store/brand.reducer';
+import { selectedBrand } from '../../store/brand.selectors';
 
 @Component({
   selector: 'app-brand-edit',
   templateUrl: './brand-edit.component.html',
   styleUrls: ['./brand-edit.component.scss']
 })
-export class BrandEditComponent implements OnInit {
+export class BrandEditComponent implements OnInit, OnDestroy {
 
   form: FormGroup;
   brand: Brand;
   isLoading: boolean = true;
+  brandSub: Subscription;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private brandService: BrandService
+    private store: Store<BrandState>
   ) { }
 
   ngOnInit(): void {
-    this.getBrand();
     this.generateForm();
+    this.getBrand();
+  }
+
+  ngOnDestroy(): void {
+    if (this.brandSub) {
+      this.brandSub.unsubscribe();
+    }
   }
 
   generateForm() {
@@ -39,25 +48,23 @@ export class BrandEditComponent implements OnInit {
       const data: Brand = this.form.value;
       this.brand.Name = data.Name;
       this.brand.Description = data.Description;
-      this.brandService.updateBrand(this.brand)
-        .subscribe(
-          res => {
-            this.router.navigate(['brand/list']);
-          },
-          err => {
-            console.log(err);
-          }
-        )
+
+      const changes: Update<Brand> = {
+        id: this.brand.ID,
+        changes: this.brand
+      }
+
+      this.store.dispatch(updateBrand({ brand: changes }));
     }
   }
 
   getBrand(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.brandService.getBrandByID(id).subscribe(ii => {
-      this.brand = ii;
-      this.form.controls['Name'].patchValue(ii.Name);
-      this.form.controls['Description'].patchValue(ii.Description);
-    });
+    this.brandSub = this.store.pipe(select(selectedBrand))
+      .subscribe(ii => {
+        this.brand = Object.assign(new Brand(), ii);
+        this.form.controls['Name'].patchValue(ii.Name);
+        this.form.controls['Description'].patchValue(ii.Description);
+      });
   }
 
 }
