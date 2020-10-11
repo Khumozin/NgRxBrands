@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "NgRxBrands"
+  "defaultProject": "NgRxBrands",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

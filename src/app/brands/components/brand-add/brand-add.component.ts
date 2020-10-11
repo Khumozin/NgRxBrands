@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
-import { Brand } from '../../models/brand.model';
 import { BrandService } from '../../services/brand.service';
+import { addBrand } from '../../store/brand.actions';
+import { BrandState } from '../../store/brand.reducer';
 
 @Component({
   selector: 'app-brand-add',
@@ -15,8 +16,8 @@ export class BrandAddComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    private router: Router,
-    private brandService: BrandService
+    private brandService: BrandService,
+    private store: Store<BrandState>
   ) { }
 
   ngOnInit(): void {
@@ -32,14 +33,7 @@ export class BrandAddComponent implements OnInit {
 
   onAdd() {
     if (this.form.valid) {
-      const brand: Brand = this.form.value;
-
-      this.brandService.createBrand(brand)
-        .subscribe(ii => {
-          this.router.navigate(['brand/list']);
-        }, err => {
-          console.log(err);
-        });
+      this.store.dispatch(addBrand({ brand: this.form.value }))
     }
   }
 

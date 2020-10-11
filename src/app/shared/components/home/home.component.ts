@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
   }
 
   onClick() {
-    this.router.navigate(['brand']);
+    this.router.navigate(['brand/list']);
   }
 
 }

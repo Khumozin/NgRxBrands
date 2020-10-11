@@ -26,8 +26,8 @@ export class BrandService {
     return this.http.get<Brand>(`${this.baseUrl}/get/${id}`);
   }
 
-  updateBrand(brand: Brand): Observable<Brand> {
-    return this.http.put<Brand>(`${this.baseUrl}/update/${brand.ID}`, brand);
+  updateBrand(id: string | number, changes: Partial<Brand>): Observable<Brand> {
+    return this.http.put<Brand>(`${this.baseUrl}/update/${id}`, changes);
   }
 
   deleteBrand(id: string): Observable<string> {
